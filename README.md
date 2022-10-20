@@ -1,49 +1,261 @@
-# API Development and Documentation Final Project
+TRIVIA APP FULL STACK PROJECT
 
-## Trivia App
-
-Udacity is invested in creating bonding experiences for its employees and students. A bunch of team members got the idea to hold trivia on a regular basis and created a webpage to manage the trivia app and play the game, but their API experience is limited and still needs to be built out.
-
-That's where you come in! Help them finish the trivia app so they can start holding trivia and seeing who's the most knowledgeable of the bunch. The application must:
-
-1. Display questions - both all questions and by category. Questions should show the question, category and difficulty rating by default and can show/hide the answer.
+Trivia is a game created for Udacity employees and students. It is a part of the Full Stack Nano degree project testing students grasp of API Development and Documentantion course. On completion  of the app one can do the following:
+1. Display questions - both all questions and by category. Questions show the question, category and difficulty rating by default and can show/hide the answer.
 2. Delete questions.
 3. Add questions and require that they include question and answer text.
 4. Search for questions based on a text query string.
 5. Play the quiz game, randomizing either all questions or within a specific category.
 
-Completing this trivia app will give you the ability to structure plan, implement, and test an API - skills essential for enabling your future applications to communicate with others.
+Completing the trivia app  gives students the ability to structure, plan, implement, and test an API.
 
-## Starting and Submitting the Project
 
-[Fork](https://help.github.com/en/articles/fork-a-repo) the project repository and [clone](https://help.github.com/en/articles/cloning-a-repository) your forked repository to your machine. Work on the project locally and make sure to push all your changes to the remote repository before submitting the link to your repository in the Classroom.
+GETTING STARTED
 
-## About the Stack
+Prerequisites and Installation
+-This project requires Python3 version, pip and node modules to be installed to your local machine 
+-We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virtual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
-We started the full stack application for you. It is designed with some key functional areas:
+-To fork the project on your local machine [clone ]()
 
-### Backend
+Backend
+-From the backend folder run the below to install all dependencies
+-The [Backend README](./backend/README.md) contain further details for working on the backend of the project
 
-The [backend](./backend/README.md) directory contains a partially completed Flask and SQLAlchemy server. You will work primarily in `__init__.py` to define your endpoints and can reference models.py for DB and SQLAlchemy setup. These are the files you'd want to edit in the backend:
+```bash
+pip install -r requirements.txt
 
-1. `backend/flaskr/__init__.py`
-2. `backend/test_flaskr.py`
+```
+Running the server
+-Firstly execute the below commands on git bash
+export FLASK_APP=flaskr
+export FLASK_ENV=development
 
-> View the [Backend README](./backend/README.md) for more details.
+-To run the server, execute:
 
-### Frontend
+ flask run --reload
 
-The [frontend](./frontend/README.md) directory contains a complete React frontend to consume the data from the Flask server. If you have prior experience building a frontend application, you should feel free to edit the endpoints as you see fit for the backend you design. If you do not have prior experience building a frontend application, you should read through the frontend code before starting and make notes regarding:
+The application is run on http://127.0.0.1:5000/ by default and is a proxy in the frontend configuration.
 
-1. What are the end points and HTTP methods the frontend is expecting to consume?
-2. How are the requests from the frontend formatted? Are they expecting certain parameters or payloads?
+Frontend
+From the frontend folder, execute the below commands to install the requirements
+  npm install // only once to install dependencies
 
-Pay special attention to what data the frontend is expecting from each API response to help guide how you format your API. The places where you may change the frontend behavior, and where you should be looking for the above information, are marked with `TODO`. These are the files you'd want to edit in the frontend:
+To start the server 
+     npm start 
 
-1. `frontend/src/components/QuestionView.js`
-2. `frontend/src/components/FormView.js`
-3. `frontend/src/components/QuizView.js`
+By default, the frontend will run on localhost:3000.
 
-By making notes ahead of time, you will practice the core skill of being able to read and understand code and will have a simple plan to follow to build out the endpoints of your backend API.
+Tests
+To deploy the tests, run
 
-> View the [Frontend README](./frontend/README.md) for more details.
+```bash
+dropdb trivia_test
+createdb trivia_test
+psql trivia_test < trivia.psql
+python test_flaskr.py
+```
+
+API REFERANCE
+
+Getting Started
+
+Base URL
+ At present this app can only be run locally and is not hosted as a base URL. The backend app is hosted at the default, http://127.0.0.1:5000/, which is set as a proxy in the frontend configuration.
+
+ Aunthentication
+ This version of the application does not require authentication or API keys.
+
+Error Handling
+Errors are returned as JSON objects in the following format:
+
+{
+    "success": False, 
+    "error": 400,
+    "message": "Bad Request"
+}
+
+The API will return four error types when requests fail:
+
+400: Bad Request
+404:  Not found
+422: The server was unable to process the request
+500: Internal server error
+
+Endpoints
+GET '/categories'
+curl http://127.0.0.1:5000/categories
+
+- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+- Request Arguments: None
+- Returns: An object with a single key, categories, that contains an object of id: category_string key:value pairs.
+
+```Response
+{
+"categories": {
+    "1": "Science",
+    "2": "Art",
+    "3": "Geography",
+    "4": "History",
+    "5": "Entertainment",
+    "6": "Sports"
+  },
+  "success": true
+}
+
+GET '/questions?page=${integer}'
+curl http://127.0.0.1:5000/questions?page=1
+
+- Fetches a paginated set of questions, a total number of questions, all categories and current category string.
+- Request Arguments: `page` - integer
+- Returns: An object with 10 paginated questions, total questions, object including all categories, and current category string
+
+```Response
+"categories": {
+    "1": "Science",
+    "2": "Art",
+    "3": "Geography",
+    "4": "History",
+    "5": "Entertainment",
+    "6": "Sports"
+  },
+  "current_category": null,
+  "questions": [
+    {
+      "answer": "Apollo 13",
+      "category": 5,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    },
+    "success": true,
+  "total_questions": 19
+    {
+
+GET '/categories/${id}/questions'
+curl  http://127.0.0.1:5000/categories/3/questions
+
+- Fetches questions for a cateogry specified by id request argument
+- Request Arguments: `id` - integer
+- Returns: An object with questions for the specified category, total questions, and current category string
+
+```Response
+"current_category": "Geography",
+  "questions": [
+    {
+      "answer": "Lake Victoria",
+      "category": 3,
+      "difficulty": 2,
+      "id": 13,
+      "question": "What is the largest lake in Africa?"
+    },
+    {
+      "answer": "The Palace of Versailles",
+      "category": 3,
+      "difficulty": 3,
+      "id": 14,
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }
+  ],
+  "success": true,
+  "total_questions": 2
+}
+
+
+DELETE '/questions/${id}'
+curl -X DELETE http://127.0.0.1:5000/questions/11
+- Deletes a specified question using the id of the question
+- Request Arguments: `id` 
+-Returns deleted question id
+
+```Response
+"deleted": 9,
+  "success": true
+}
+
+POST '/questions'
+curl -X POST -H "Content-Type: application/json" -d '{"question": "Who is the richest singer in the world", "answer":"Paul MCCartney", "category": "5", "difficulty": "1"}' http://127.0.0.1:5000/questions
+- Sends a post request in order to add a new question
+- Returns the id of a created question, length of total questions and current paginated questions
+
+```Response
+ "created": 38,
+  "questions": [
+    {
+      "answer": "Apollo 13",
+      "category": 5,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    },
+    {
+      "answer": "Tom Cruise",
+      "category": 5,
+      "difficulty": 4,
+      "id": 4,
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    },
+    {
+      "answer": "Maya Angelou",
+      "category": 4,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    "success": true,
+    "total_questions": 19
+
+   
+POST '/questions/search'
+curl -X POST -H "Content-Type: application/json" -d '{"searchTerm": "title"}' http://localhost:5000/questions/search
+- Sends a post request in order to search for a specific question by search term
+-Returns any array of questions, a number of totalQuestions that met the search term and the current category string
+
+```Response
+ "current_category": null,
+  "questions": [
+    {
+      "answer": "Maya Angelou",
+      "category": 4,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    {
+      "answer": "Edward Scissorhands",
+      "category": 5,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }
+  ],
+  "success": true,
+  "total_questions": 2
+}
+
+
+POST '/quizzes'
+curl -X POST 'http://127.0.0.1:5000/quizzes' -H 'Content-Type: application/json' -d '{"previous_questions": [1, 4, 20, 15], "quiz_category":{"id":"1", "type":"Science"}}'
+- Sends a post request in order to get the next question
+- Returns a single new question object
+
+```Response
+ "question": {
+    "answer": "Blood",
+    "category": 1,
+    "difficulty": 4,
+    "id": 22,
+    "question": "Hematology is a branch of medicine involving the study of what?"
+  },
+  "success": true
+}
+
+DEPLOYMENT
+N/A
+
+Authors
+This project was completed by Vimbai Rusike
+
+ACKNOWLEDGMENTS
+The awesome team at Udacity and our mentors who made this journey easy.
+ 
